@@ -52,9 +52,28 @@ Claude は毎回 `songs/<曲名>.md` を直接編集するので、ファイル�
 
 ### 1. ACE-Step サーバーを起動（GPU 環境）
 
-[ACE-Step](https://github.com/ace-step/ACE-Step) を導入し、API サーバーを
-立ち上げます（例: `http://localhost:7865`）。詳細は ACE-Step 本家の README を
-参照してください。
+付属のセットアップスクリプトが、ACE-Step のクローン・venv 作成・依存導入・
+API サーバー起動までまとめて行います（GPU 必須・冪等）:
+
+```bash
+scripts/setup_acestep.sh            # 導入（初回のみ）＋サーバー起動
+# scripts/setup_acestep.sh --install  # 導入だけ
+# scripts/setup_acestep.sh --start    # 起動だけ（導入済み前提）
+```
+
+設定は環境変数で上書きできます:
+
+| 変数 | 既定値 | 説明 |
+| --- | --- | --- |
+| `ACESTEP_HOME` | `./.acestep` | クローン/インストール先 |
+| `ACESTEP_REPO` | 公式リポジトリ | 取得元 Git URL |
+| `ACESTEP_PORT` | `7865` | API/Gradio ポート |
+| `ACESTEP_HOST` | `0.0.0.0` | バインドアドレス |
+
+> 手動で入れたい場合は [ACE-Step](https://github.com/ace-step/ACE-Step) 本家の
+> README に従ってサーバーを起動してください（既定 `http://localhost:7865`）。
+> ACE-Step の起動エントリ名はバージョンで変わることがあるため、スクリプトは
+> 代表的な起動方法を順に試します。
 
 ### 2. レンダリング
 
@@ -92,6 +111,8 @@ Claude は毎回 `songs/<曲名>.md` を直接編集するので、ファイル�
 │           │   └── suno-prompting.md    # スタイルプロンプトの型と注意点
 │           └── scripts/
 │               └── acestep.sh      # ACE-Step API 呼び出しスクリプト
+├── scripts/
+│   └── setup_acestep.sh            # ACE-Step の導入＋サーバー起動（GPU環境用）
 ├── templates/
 │   └── suno-song.md                # 出力ファイルのテンプレート
 └── songs/                          # 生成した曲（.md / .wav）の置き場
